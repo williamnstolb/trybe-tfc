@@ -7,7 +7,7 @@ class App {
   constructor() {
     // ...
     this.app = express();
-    this.config();    
+    this.config();
     // ...
   }
 
@@ -21,6 +21,10 @@ class App {
 
     this.app.use(accessControl);
     // ...
+  }
+
+  public use(rota: string, callback: express.RequestHandler):void {
+    this.app.use(rota, callback);
   }
 
   // ...
