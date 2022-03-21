@@ -1,9 +1,8 @@
 import * as express from 'express';
+import login from '../controller/loginController';
 
 const route = express.Router();
 
-route.post('/', async (req, res) => {
-  res.send('outro teste');
-});
+route.post('/', login);
 
 export default route;
