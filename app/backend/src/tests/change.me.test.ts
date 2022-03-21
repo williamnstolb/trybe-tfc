@@ -8,6 +8,7 @@ import User from '../database/models/User';
 
 import { Response } from 'superagent';
 import UsersMoked from './Mocks/UsersMoked';
+import { log } from 'console';
 
 chai.use(chaiHttp);
 
@@ -72,18 +73,19 @@ describe('Verifica rota /login', () => {
     expect(chaiHttpResponse.status).to.be.eq(200);
   });
 
-  it('testa login com usuário e senha incorretos', async () => {
-    chaiHttpResponse = await chai.request(app).post('/login').send({
-      email: UsersMoked.user.incorrect.email,
-      password: UsersMoked.user.incorrect.password,
-    });
-    expect(chaiHttpResponse.status).to.be.eq(401);
-  });
-
-  it('testa login com usuário incorreto', async () => {
+  it.only('testa login com usuário incorreto', async () => {
     chaiHttpResponse = await chai.request(app).post('/login').send({
       email: UsersMoked.user.incorrect.email,
       password: UsersMoked.user.correct.password,
+    });
+    console.log(UsersMoked.user.incorrect.email);
+    expect(chaiHttpResponse.status).to.be.eq(401);
+  });
+
+  it('testa login com senha incorreta', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: UsersMoked.user.correct.email,
+      password: UsersMoked.user.incorrect.password,
     });
     expect(chaiHttpResponse.status).to.be.eq(401);
   });
