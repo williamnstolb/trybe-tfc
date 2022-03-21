@@ -3,8 +3,14 @@ export interface LoginUser {
   password: string;
 }
 
-export interface IUser extends LoginUser {
+export interface BaseUser {
   id: number;
+  username: string;
   role: string;
-  password: string;
 }
+
+export interface UserFounded extends BaseUser {
+  email: string;
+}
+
+export interface IUser extends BaseUser, LoginUser {}
