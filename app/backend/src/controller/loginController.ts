@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import loginService from '../service/loginService';
 import { LoginUser } from '../interface/User';
-import StatusCode from '../utils/statusCode';
+import ResponseStatusMessage from '../interface/Response';
 
 async function login(req: Request, res: Response) {
   const { email, password }: LoginUser = req.body;
-  const response = await loginService({ email, password });
-  res.status(StatusCode.OK).json(response);
+  const response: ResponseStatusMessage = await loginService({ email, password });
+  res.status(response.status).json(response.message);
 }
 
 export default login;
