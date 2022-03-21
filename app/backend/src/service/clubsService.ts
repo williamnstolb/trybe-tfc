@@ -6,4 +6,15 @@ async function getAllService() {
   return { message: clubs, status: StatusCode.OK };
 }
 
-export default getAllService;
+async function getByIdService(id: string) {
+  console.log('ID =====>', id);
+  const club = await Club.findOne({ where: { id } });
+  console.log('CLUB =======>', club);
+
+  return { message: club, status: StatusCode.OK };
+}
+
+export {
+  getAllService,
+  getByIdService,
+};
