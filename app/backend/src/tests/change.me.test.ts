@@ -9,6 +9,7 @@ import Club from '../database/models/Club';
 
 import { Response } from 'superagent';
 import UsersMoked from './Mocks/UsersMoked';
+import ClubsMoked from './Mocks/ClubsMoked';
 import { log } from 'console';
 
 chai.use(chaiHttp);
@@ -102,43 +103,22 @@ describe('Verifica rota /login', () => {
 });
 
 describe('Verifica rota /club', () => {
-  before(async () => {
-    sinon
-      .stub(User, "findOne")
-      .resolves({
-        id:1,
-        username: 'nameTest',
-        role: 'roleTest',
-        email: 'email@test.com',
-        password: 'passwordTest',
-      } as User);
-  });
 
-  after(() => { (Club.findOne as sinon.SinonStub).restore(); });
-
-  before(async () => {
-    sinon
-      .stub(Club, "findOne")
-      .resolves({
-        id:1,
-        username: 'nameTest',
-        role: 'roleTest',
-        email: 'email@test.com',
-        password: 'passwordTest',
-      } as User);
-  });
-
-  after(() => { (CLub.findOne as sinon.SinonStub).restore(); });
-
-  // Testes a serem feitos: 
+  let chaiHttpResponse: Response;
   
+  before(async () => {
+    sinon
+      .stub(Club, "findAll")
+      .resolves( ClubsMoked as Club[]);
+  });
 
-  // it('testa login com usuário e senha corretos', async () => {
-  //   chaiHttpResponse = await chai.request(app).post('/login').send({
-  //     email: UsersMoked.user.correct.email,
-  //     password: UsersMoked.user.correct.password,
-  //   });
-  //    // expect(false).to.be.eq(true);
-  //   expect(chaiHttpResponse.status).to.be.eq(200);
-  // });
+  after(() => { (Club.findAll as sinon.SinonStub).restore(); });
+
+  // Testes a serem feitos:
+  // 1. Listar todos os clubes  
+
+  it('testa listar todos os clubes', async () => {
+    chaiHttpResponse = await chai.request(app).get('/club');
+    expect(chaiHttpResponse.status).to.be.eq(200);
+  });
 });
