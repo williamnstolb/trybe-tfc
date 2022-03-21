@@ -4,9 +4,12 @@ import User from '../database/models/User';
 import tokenGenerator from '../auth/Jwt';
 import StatusCode from '../utils/statusCode';
 import Message from '../utils/message';
+import passawordCorrect from '../validations/validation';
 
 async function loginService({ email, password }: LoginUser) {
-  if (!email) { return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED }; }
+  if (!email || !password) {
+    return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED };
+  }
 
   const user: IUser | null = await User.findOne({
     where: { email },
@@ -18,7 +21,7 @@ async function loginService({ email, password }: LoginUser) {
     return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
   }
 
-  const isPasswordMatched = password === user.password;
+  const isPasswordMatched: boolean = await passawordCorrect(email, password);
 
   if (!isPasswordMatched) {
     return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };

@@ -91,5 +91,12 @@ describe('Verifica rota /login', () => {
     });
     expect(chaiHttpResponse.status).to.be.eq(401);
   });
+
+  it('testa login sem senha', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      email: UsersMoked.user.correct.email,
+    });
+    expect(chaiHttpResponse.status).to.be.eq(401);
+  });
 });
 
