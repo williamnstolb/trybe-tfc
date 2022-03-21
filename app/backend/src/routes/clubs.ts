@@ -1,9 +1,8 @@
 import * as express from 'express';
+import getAll from '../controller/clubsController';
 
 const route = express.Router();
 
-route.get('/', (req, res) => {
-  res.send('Hello World!');
-});
+route.get('/', getAll);
 
 export default route;
