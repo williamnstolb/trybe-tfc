@@ -56,13 +56,10 @@ describe('Verifica rota /login', () => {
 
   // Testes a serem feitos: 
   // 1. Login com usuário e senha válidos
-  // 2. Login com usuário e senha inválidos
-  // 3. Login com usuário inválido
-  // 4. Login com senha inválida
-  // 5. Login sem usuário e senha
-  // 6. Login sem usuário
-  // 7. Login sem senha
-  // 8. Login com usuário e senha válidos e redirecionar para a página de dashboard
+  // 2. Login com usuário inválido
+  // 3. Login com senha inválida
+  // 4. Login sem usuário
+  // 5. Login sem senha
 
   it('testa login com usuário e senha corretos', async () => {
     chaiHttpResponse = await chai.request(app).post('/login').send({
@@ -73,12 +70,10 @@ describe('Verifica rota /login', () => {
     expect(chaiHttpResponse.status).to.be.eq(200);
   });
 
-  it.only('testa login com usuário incorreto', async () => {
+  it('testa login com usuário incorreto', async () => {
     chaiHttpResponse = await chai.request(app).post('/login').send({
       email: UsersMoked.user.incorrect.email,
-      password: UsersMoked.user.correct.password,
     });
-    console.log(UsersMoked.user.incorrect.email);
     expect(chaiHttpResponse.status).to.be.eq(401);
   });
 
@@ -86,6 +81,13 @@ describe('Verifica rota /login', () => {
     chaiHttpResponse = await chai.request(app).post('/login').send({
       email: UsersMoked.user.correct.email,
       password: UsersMoked.user.incorrect.password,
+    });
+    expect(chaiHttpResponse.status).to.be.eq(401);
+  });
+  
+  it('testa login sem usuário', async () => {
+    chaiHttpResponse = await chai.request(app).post('/login').send({
+      password: UsersMoked.user.correct.password,
     });
     expect(chaiHttpResponse.status).to.be.eq(401);
   });
