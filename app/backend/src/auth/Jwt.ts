@@ -10,7 +10,6 @@ export default async function tokenGenerator({ role, email }: Token): Promise<st
     algorithm: 'HS256',
     expiresIn: '5d',
   });
-  console.log('TOKEN ====>', token);
 
   return token;
 }
