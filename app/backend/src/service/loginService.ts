@@ -1,10 +1,10 @@
 // import { compareSync } from 'bcryptjs';
 import { LoginUser, IUser } from '../interface/User';
 import User from '../database/models/User';
-import tokenGenerator from '../auth/Jwt';
+import { tokenGenerator, validateToken, decodeToken } from '../auth/Jwt';
 import StatusCode from '../utils/statusCode';
 import Message from '../utils/message';
-import passawordCorrect from '../validations/validation';
+import passwordCorrect from '../validations/validation';
 
 async function loginService({ email, password }: LoginUser) {
   if (!email || !password) {
@@ -21,7 +21,7 @@ async function loginService({ email, password }: LoginUser) {
     return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
   }
 
-  const isPasswordMatched: boolean = await passawordCorrect(email, password);
+  const isPasswordMatched: boolean = await passwordCorrect(email, password);
 
   if (!isPasswordMatched) {
     return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
@@ -31,4 +31,24 @@ async function loginService({ email, password }: LoginUser) {
   return { message: { user, token }, status: StatusCode.OK };
 }
 
-export default loginService;
+async function validateService(authorization: string | undefined) {
+  const tokenOk = validateToken(authorization);
+  if (!tokenOk) {
+    return { message: 'Token is valid', status: StatusCode.OK };
+  }
+  // if (!authorization) {
+  //   return { message: Message.UNAUTHORIZED, status: StatusCode.UNAUTHORIZED };
+  // }
+
+  const role = await decodeToken(authorization);
+  // if (!decoded) {
+  //   return
+  // }
+
+  return { message: role, status: StatusCode.OK };
+}
+
+export {
+  loginService,
+  validateService,
+};
