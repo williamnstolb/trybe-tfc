@@ -1,12 +1,10 @@
 import * as jwt from 'jsonwebtoken';
-// import { readFile } from 'fs/promises';
+import * as fs from 'fs/promises';
 import { Token } from '../interface/JwtInteface';
 
-const secretKey = 'jwt.evaluation.key';
-
 async function tokenGenerator({ role, email }: Token): Promise<string> {
-  // const secretKey = await readFile('jwt.evaluation.key', 'utf8');
-  const token = jwt.sign({ role, email }, secretKey, {
+  const SECRETKEY = await fs.readFile('jwt.evaluation.key', 'utf8');
+  const token = jwt.sign({ role, email }, SECRETKEY, {
     algorithm: 'HS256',
     expiresIn: '5d',
   });
@@ -14,11 +12,13 @@ async function tokenGenerator({ role, email }: Token): Promise<string> {
   return token;
 }
 
-async function validateToken(authorization: string | undefined): Promise<boolean> {
-  // jwt.verify(authorization, secretKey);
-  // return jwt.decode(authorization, { complete: true });
-  if (!authorization) return false;
-  return true;
+async function validateToken(authorization: string | undefined) {
+  try {
+    const SECRETKEY: string = await fs.readFile('jwt.evaluation.key', 'utf8');
+    return jwt.verify(authorization, SECRETKEY);
+  } catch (error) {
+    return false;
+  }
 }
 
 async function decodeToken(authorization: string | undefined):
