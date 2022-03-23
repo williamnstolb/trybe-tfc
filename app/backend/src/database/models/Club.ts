@@ -2,10 +2,9 @@ import { DataTypes, Model } from 'sequelize';
 import db from '.';
 
 class Club extends Model {
-  // public <campo>!: <tipo>;
-  public id!: number;
+  public id?: number;
 
-  public clubName!: string;
+  public clubName: string;
 }
 
 Club.init({
@@ -21,10 +20,8 @@ Club.init({
     allowNull: false,
   },
 }, {
-  // ... Outras configs
   underscored: true,
   sequelize: db,
-  // modelName: 'example',
   modelName: 'Club',
   tableName: 'clubs',
   timestamps: false,

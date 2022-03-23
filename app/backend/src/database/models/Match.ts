@@ -3,7 +3,7 @@ import db from '.';
 import Club from './Club';
 
 class Match extends Model {
-  public id: number;
+  public id?: number;
 
   public homeTeam: number;
 
@@ -26,7 +26,7 @@ Match.init({
   homeTeam: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: { model: 'clubs', key: 'id' },
+    references: { model: 'Club', key: 'id' },
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   },
@@ -37,7 +37,7 @@ Match.init({
   awayTeam: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    references: { model: 'clubs', key: 'id' },
+    references: { model: 'Club', key: 'id' },
     onUpdate: 'CASCADE',
     onDelete: 'CASCADE',
   },
@@ -57,7 +57,7 @@ Match.init({
   timestamps: false,
 });
 
-Match.belongsTo(Club, { foreignKey: 'homeTeam', as: 'clubs', constraints: false });
-Club.hasMany(Match, { foreignKey: 'id', as: 'matchs', constraints: false });
+Match.belongsTo(Club, { foreignKey: 'homeTeam', as: 'homeClub' });
+Match.belongsTo(Club, { foreignKey: 'awayTeam', as: 'awayClub' });
 
 export default Match;
