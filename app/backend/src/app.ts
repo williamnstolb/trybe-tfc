@@ -1,5 +1,8 @@
 import * as express from 'express';
-import route from './routes';
+// import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
+// import route from './routes';
+import { login, validate } from './controller/loginController';
 
 class App {
   public app: express.Express;
@@ -9,8 +12,6 @@ class App {
     // ...
     this.app = express();
     this.config();
-    this.app.use(express.json());
-    this.app.use(route);
     // ...
   }
 
@@ -23,15 +24,22 @@ class App {
     };
 
     this.app.use(accessControl);
+    // this.app.use(bodyParser.json());
     // ...
   }
 
-  public use(rota: string, callback: express.RequestHandler):void {
-    this.app.use(rota, callback);
-  }
+  // public use(rota: string, callback: express.RequestHandler):void {
+  //   this.app.use(rota, callback);
+  // }
 
   // ...
   public start(PORT: string | number):void {
+    this.app.use(express.json());
+    this.app.use(cors());
+    // this.app.use(route);
+    this.app.post('/login', login);
+    this.app.get('/login/validate', validate);
+
     this.app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
     });

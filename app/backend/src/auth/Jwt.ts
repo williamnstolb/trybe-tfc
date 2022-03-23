@@ -8,7 +8,6 @@ async function tokenGenerator({ role, email }: Token): Promise<string> {
     algorithm: 'HS256',
     expiresIn: '5d',
   });
-
   return token;
 }
 
