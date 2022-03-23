@@ -11,7 +11,8 @@ async function tokenGenerator({ role, email }: Token): Promise<string> {
   return token;
 }
 
-async function validateToken(authorization: string) {
+async function validateToken(authorization: string | undefined) {
+  if (!authorization) return false;
   try {
     const SECRETKEY: string = await fs.readFile('jwt.evaluation.key', 'utf8');
     return jwt.verify(authorization, SECRETKEY);

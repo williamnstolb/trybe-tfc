@@ -10,7 +10,7 @@ async function login(req: Request, res: Response) {
 }
 
 async function validate(req: Request, res: Response) {
-  const { authorization }: any = req.headers;
+  const { authorization } = req.headers;
 
   if (!authorization) { res.status(404).json({ message: 'Unauthorized' }); }
 

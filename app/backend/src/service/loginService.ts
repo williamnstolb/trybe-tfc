@@ -31,7 +31,7 @@ async function loginService({ email, password }: LoginUser) {
   return { message: { user, token }, status: StatusCode.OK };
 }
 
-async function validateService(authorization: string) {
+async function validateService(authorization: string | undefined) {
   const tokenOk = validateToken(authorization);
   if (!tokenOk) {
     return { message: Message.UNAUTHORIZED, status: StatusCode.UNAUTHORIZED };
