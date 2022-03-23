@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
-import getAllMatchsService from '../service/matchsService';
+import getAllService from '../service/matchsService';
+import ResponseStatusMessage from '../interface/Response';
 
 async function getAllMatchs(_req: Request, res: Response): Promise<void> {
-  const response: string | void = await getAllMatchsService();
-  res.status(200).json(response);
+  const response: ResponseStatusMessage = await getAllService();
+  res.status(response.status).json(response.message);
 }
 
 export default getAllMatchs;

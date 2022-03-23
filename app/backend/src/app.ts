@@ -2,7 +2,7 @@ import * as express from 'express';
 import * as cors from 'cors';
 // import route from './routes';
 import { login, validate } from './controller/loginController';
-import { getAll, getById } from './controller/clubsController';
+import { getAllClubs, getByIdCLub } from './controller/clubsController';
 import getAllMatchs from './controller/matchsController';
 
 class App {
@@ -38,8 +38,8 @@ class App {
     this.app.use(cors());
     this.app.post('/login', login);
     this.app.get('/login/validate', validate);
-    this.app.get('/clubs', getAll);
-    this.app.get('/clubs/:id', getById);
+    this.app.get('/clubs', getAllClubs);
+    this.app.get('/clubs/:id', getByIdCLub);
     this.app.get('/matchs', getAllMatchs);
 
     this.app.listen(PORT, () => {
