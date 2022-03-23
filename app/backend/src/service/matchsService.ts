@@ -1,16 +1,15 @@
-import Match from '../database/models/Match';
-import Club from '../database/models/Club';
 import StatusCode from '../utils/statusCode';
+import { getAllInprogress, getAll } from '../utils/matchs';
 
-async function getAllService() {
-  const response: Match[] = await Match.findAll(
-    {
-      include: [
-        { model: Club, as: 'awayClub', attributes: ['clubName'] },
-        { model: Club, as: 'homeClub', attributes: ['clubName'] },
-      ],
-    },
-  );
+async function getAllService(inProgress: boolean) {
+  if (inProgress) {
+    const response = await getAllInprogress(inProgress);
+    return {
+      status: StatusCode.OK,
+      message: response,
+    };
+  }
+  const response = await getAll();
   return { message: response, status: StatusCode.OK };
 }
 
