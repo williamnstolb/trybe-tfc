@@ -9,7 +9,7 @@ async function getAllMatchs(req: Request, res: Response): Promise<void> {
 }
 
 async function create(req: Request, res: Response): Promise<void> {
-  const { authorization } = req.headers.authorization;
+  const { authorization } = req.headers;
 
   const response: ResponseStatusMessage = await createService(req.body, authorization);
   res.status(response.status).json(response.message);

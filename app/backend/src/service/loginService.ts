@@ -32,7 +32,7 @@ async function loginService({ email, password }: LoginUser) {
 }
 
 async function validateService(authorization: string | undefined) {
-  const tokenOk = validateToken(authorization);
+  const tokenOk = await validateToken(authorization);
   if (!tokenOk) {
     return { message: Message.UNAUTHORIZED, status: StatusCode.UNAUTHORIZED };
   }
