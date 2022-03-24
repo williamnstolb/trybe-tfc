@@ -8,4 +8,12 @@ async function getAllMatchs(req: Request, res: Response): Promise<void> {
   res.status(response.status).json(response.message);
 }
 
-export default getAllMatchs;
+async function create(req: Request, res: Response): Promise<void> {
+  console.log('apenas para teste');
+  res.status(200).json('create');
+}
+
+export {
+  getAllMatchs,
+  create,
+};

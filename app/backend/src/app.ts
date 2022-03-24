@@ -3,7 +3,7 @@ import * as cors from 'cors';
 // import route from './routes';
 import { login, validate } from './controller/loginController';
 import { getAllClubs, getByIdCLub } from './controller/clubsController';
-import getAllMatchs from './controller/matchsController';
+import { getAllMatchs, create } from './controller/matchsController';
 
 class App {
   public app: express.Express;
@@ -41,6 +41,7 @@ class App {
     this.app.get('/clubs', getAllClubs);
     this.app.get('/clubs/:id', getByIdCLub);
     this.app.get('/matchs', getAllMatchs);
+    this.app.post('/matchs', create);
 
     this.app.listen(PORT, () => {
       console.log(`Server started on port ${PORT}`);
