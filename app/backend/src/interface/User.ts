@@ -8,3 +8,8 @@ export interface IUser extends LoginUser {
   username: string;
   role: string;
 }
+
+export interface IPasswordValidate {
+  password: string;
+  userPw: string;
+}

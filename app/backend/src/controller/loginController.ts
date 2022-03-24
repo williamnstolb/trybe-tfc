@@ -5,6 +5,7 @@ import ResponseStatusMessage from '../interface/Response';
 
 async function login(req: Request, res: Response): Promise<void> {
   const { email, password }: LoginUser = req.body;
+
   const response: ResponseStatusMessage = await loginService({ email, password });
   res.status(response.status).json(response.message);
 }

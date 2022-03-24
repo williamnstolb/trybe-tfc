@@ -1,20 +1,39 @@
-import { compareSync, hash } from 'bcryptjs';
+import { compare } from 'bcrypt';
 import Message from '../utils/message';
 import StatusCode from '../utils/statusCode';
-import User from '../database/models/User';
-import { IUser } from '../interface/User';
+import { IPasswordValidate } from '../interface/User';
 import ResponseStatusMessage from '../interface/Response';
 import { ICreateMatch } from '../interface/match';
 
-async function passwordCorrect(email: string, password: string): Promise<boolean> {
-  const user: IUser | null = await User.findOne({ where: { email } });
-  console.log('user =====>', user);
-  
-  if (user) {
-    const userPw = await hash(user.password, 10);
-    return compareSync(password, userPw);
+async function emailValidation(email: string) {
+  const emailFormat = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+  if (!email) {
+    return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED };
+  }
+
+  if (!email.match(emailFormat)) {
+    return { message: Message.INCORRECT_FORMAT_EMAIL, status: StatusCode.UNAUTHORIZED };
   }
   return false;
+}
+
+async function passwordValidation(password: string) {
+  if (!password) {
+    return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED };
+  }
+
+  if (password.length < 6) {
+    return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
+  }
+  return false;
+}
+
+async function passwordCorrect({ password, userPw }: IPasswordValidate): Promise<boolean> {
+  console.log('password ====>', password);
+  console.log('userPw ====>', userPw);
+  const passwordOk = await compare(password, userPw);
+  return passwordOk;
 }
 
 async function createMatchValidation(match: ICreateMatch): Promise<ResponseStatusMessage> {
@@ -31,6 +50,8 @@ async function createMatchValidation(match: ICreateMatch): Promise<ResponseStatu
 }
 
 export {
+  emailValidation,
+  passwordValidation,
   passwordCorrect,
   createMatchValidation,
 };
