@@ -1,4 +1,4 @@
 export default interface ResponseStatusMessage {
-  message: any,
+  message: unknown,
   status: number,
 }
