@@ -8,6 +8,8 @@ import { ICreateMatch } from '../interface/match';
 
 async function passwordCorrect(email: string, password: string): Promise<boolean> {
   const user: IUser | null = await User.findOne({ where: { email } });
+  console.log('user =====>', user);
+  
   if (user) {
     const userPw = await hash(user.password, 10);
     return compareSync(password, userPw);

@@ -5,6 +5,7 @@ enum Message {
   MATCH_NOT_IN_PROGRESS = 'Match is not in progress',
   SAME_TEAMS = 'It is not possible to create a match with two equal teams',
   MATCH_FINISHED = 'Match is finished',
+  TEAM_NOT_EXIST = 'There is no team with such id!',
 }
 
 export default Message;

@@ -1,4 +1,3 @@
-// import { compareSync } from 'bcryptjs';
 import { LoginUser, IUser } from '../interface/User';
 import User from '../database/models/User';
 import { tokenGenerator, validateToken, decodeToken } from '../auth/Jwt';
@@ -7,6 +6,9 @@ import Message from '../utils/message';
 import { passwordCorrect } from '../validations/validation';
 
 async function loginService({ email, password }: LoginUser) {
+  console.log('email =====>', email);  
+  console.log('Senha ======> ', password);
+  
   if (!email || !password) {
     return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED };
   }
@@ -33,11 +35,14 @@ async function loginService({ email, password }: LoginUser) {
 
 async function validateService(authorization: string | undefined) {
   const tokenOk = await validateToken(authorization);
+  console.log('tokenOk =====>', tokenOk);
+  
   if (!tokenOk) {
     return { message: Message.UNAUTHORIZED, status: StatusCode.UNAUTHORIZED };
   }
 
   const role = await decodeToken(authorization);
+  console.log('role =====>', role);
 
   return { message: role, status: StatusCode.OK };
 }

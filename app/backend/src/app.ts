@@ -36,8 +36,8 @@ class App {
   public start(PORT: string | number):void {
     this.app.use(express.json());
     this.app.use(cors());
-    this.app.post('/login', login);
     this.app.get('/login/validate', validate);
+    this.app.post('/login', login);    
     this.app.get('/clubs', getAllClubs);
     this.app.get('/clubs/:id', getByIdCLub);
     this.app.get('/matchs', getAllMatchs);
