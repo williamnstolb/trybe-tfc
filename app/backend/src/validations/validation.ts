@@ -25,7 +25,7 @@ async function createMatchValidation(match: ICreateMatch): Promise<ResponseStatu
     return { status: StatusCode.BAD_REQUEST, message: Message.SAME_TEAMS };
   }
 
-  return { status: StatusCode.OK, message: '' };
+  return { status: StatusCode.CREATED, message: '' };
 }
 
 export {

@@ -5,6 +5,7 @@ import { validateToken } from '../auth/Jwt';
 import { ICreateMatch } from '../interface/match';
 import Match from '../database/models/Match';
 import { createMatchValidation } from '../validations/validation';
+import Message from '../utils/message';
 
 async function getAllService(inProgress:
 string | string[] | QueryString.ParsedQs | QueryString.ParsedQs[] | undefined) {
@@ -29,7 +30,7 @@ async function createService(match: ICreateMatch, authorization: string | undefi
   }
 
   const createValidation = await createMatchValidation(match);
-  if (createValidation.status !== StatusCode.OK) {
+  if (createValidation.status !== StatusCode.CREATED) {
     return createValidation;
   }
 
@@ -38,12 +39,18 @@ async function createService(match: ICreateMatch, authorization: string | undefi
   });
 
   return {
-    status: StatusCode.OK,
+    status: StatusCode.CREATED,
     message: response,
   };
+}
+
+async function finishMatchService(id: number) {
+  await Match.update({ inProgress: false }, { where: { id } });
+  return { status: StatusCode.OK, message: Message.MATCH_FINISHED };
 }
 
 export {
   getAllService,
   createService,
+  finishMatchService,
 };
