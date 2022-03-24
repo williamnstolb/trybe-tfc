@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import getAllService from '../service/matchsService';
+import { getAllService, createService } from '../service/matchsService';
 import ResponseStatusMessage from '../interface/Response';
 
 async function getAllMatchs(req: Request, res: Response): Promise<void> {
@@ -9,8 +9,10 @@ async function getAllMatchs(req: Request, res: Response): Promise<void> {
 }
 
 async function create(req: Request, res: Response): Promise<void> {
-  console.log('apenas para teste');
-  res.status(200).json('create');
+  const { authorization } = req.headers.authorization;
+
+  const response: ResponseStatusMessage = await createService(req.body, authorization);
+  res.status(response.status).json(response.message);
 }
 
 export {

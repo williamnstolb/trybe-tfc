@@ -4,7 +4,7 @@ import User from '../database/models/User';
 import { tokenGenerator, validateToken, decodeToken } from '../auth/Jwt';
 import StatusCode from '../utils/statusCode';
 import Message from '../utils/message';
-import passwordCorrect from '../validations/validation';
+import { passwordCorrect } from '../validations/validation';
 
 async function loginService({ email, password }: LoginUser) {
   if (!email || !password) {
