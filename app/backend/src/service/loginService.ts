@@ -1,4 +1,3 @@
-// import { hash } from 'bcrypt';
 import { LoginUser, IUser } from '../interface/User';
 import User from '../database/models/User';
 import { tokenGenerator, validateToken, decodeToken } from '../auth/Jwt';
@@ -23,7 +22,6 @@ async function loginService({ email, password }: LoginUser) {
     return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
   }
 
-  // const passwordMatched: string = await hash(password, 10);
   const userPw: string = userComplete.password;
   const isPasswordMatched: boolean = await passwordCorrect({ password, userPw });
   if (!isPasswordMatched) {
