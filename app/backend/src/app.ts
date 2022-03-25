@@ -35,7 +35,7 @@ class App {
     this.app.post('/matchs', create);
     this.app.patch('/matchs/:id/finish', finishMatch);
     this.app.patch('/matchs/:id', updateMatch);
-    this.app.get('/home', home);
+    this.app.get('/leaderboard/home', home);
     // ...
   }
 
