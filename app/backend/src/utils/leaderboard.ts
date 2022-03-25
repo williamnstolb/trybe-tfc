@@ -18,12 +18,8 @@ async function getAllMatchsClub(club: Club) {
     homeTeam: club.id,
     inProgress: false,
   },
-  raw: true,
   attributes: ['homeTeamGoals', 'awayTeamGoals'],
   });
-  // if (club.clubName === 'Santos') {
-  //   console.log('matches: ', matches);
-  // }
 
   return matches;
 }
@@ -36,9 +32,7 @@ async function clubTotalVictories(club: Club) {
     }
     return acc;
   }, 0);
-  if (club.clubName === 'Santos') {
-    console.log('vitorias correta: 3', totalVictories);
-  }
+
   return totalVictories;
 }
 
@@ -50,9 +44,7 @@ async function clubTotalDraws(club: Club) {
     }
     return acc;
   }, 0);
-  if (club.clubName === 'Santos') {
-    console.log('Empates correto :2', totalDraws);
-  }
+
   return totalDraws;
 }
 
@@ -61,14 +53,13 @@ async function clubTotalPoints(club: Club) {
   const D = await clubTotalDraws(club);
 
   const totalVictories = ((W * 3) + D);
+
   return totalVictories;
 }
 
 async function clubTotalGames(club: Club) {
   const totalGames = (await getAllMatchsClub(club)).length;
-  if (club.clubName === 'Santos') {
-    console.log('Total de jogos correto: 5', totalGames);
-  }
+
   return totalGames;
 }
 
@@ -91,9 +82,7 @@ async function clubTotalGoalsFavor(club: Club) {
       inProgress: 0,
     },
   });
-  if (club.clubName === 'Santos') {
-    console.log('Gols pros correto: 12', totalGoalsFavor);
-  }
+
   return totalGoalsFavor;
 }
 
@@ -104,9 +93,7 @@ async function clubGoalsOwn(club: Club) {
       inProgress: 0,
     },
   });
-  if (club.clubName === 'Santos') {
-    console.log('Gols contra correto: 6', golsOwn);
-  }
+
   return golsOwn;
 }
 
@@ -114,6 +101,7 @@ async function clubTotalGoalsDifference(club: Club) {
   const goalsFavor = await clubTotalGoalsFavor(club);
   const goalsOwn = await clubGoalsOwn(club);
   const totalGoalsDifference = goalsFavor - goalsOwn;
+
   return totalGoalsDifference;
 }
 
@@ -121,6 +109,7 @@ async function clubTakeAdvantagePercentage(club: Club) {
   const P = await clubTotalPoints(club);
   const J = await clubTotalGames(club);
   const takeAdvantagePercentage = Number(((P / (3 * J)) * 100).toFixed(2));
+
   return takeAdvantagePercentage;
 }
 
