@@ -66,22 +66,32 @@ async function clubTotalGames(club: Club) {
 //   return totalLosses;
 // }
 
-function clubTotalGoalsFor(club: Club) {
-  const totalGoalsFor = 0;
+async function clubTotalGoalsFor(club: Club) {
+  const totalGoalsFor = await Match.sum('homeTeamGoals', {
+    where: {
+      homeClubId: club.id,
+      inProgress: false,
+    },
+  });
   return totalGoalsFor;
 }
 
-function clubTotalGoalsAgainst(club: Club) {
-  const totalGoalsAgainst = 0;
+async function clubTotalGoalsAgainst(club: Club) {
+  const totalGoalsAgainst = await Match.sum('awayTeamGoals', {
+    where: {
+      awayClubId: club.id,
+      inProgress: false,
+    },
+  });
   return totalGoalsAgainst;
 }
 
-function clubTotalGoalsDifference(club: Club) {
-  const totalGoalsDifference = 0;
+async function clubTotalGoalsDifference(club: Club) {
+  const totalGoalsDifference = await clubTotalGoalsFor(club) - await clubTotalGoalsAgainst(club);
   return totalGoalsDifference;
 }
 
-function clubTakeAdvantagePercentage(club: Club) {
+async function clubTakeAdvantagePercentage(club: Club) {
   const takeAdvantagePercentage = 0;
   return takeAdvantagePercentage;
 }
@@ -92,7 +102,7 @@ export {
   clubTotalGames,
   clubTotalWins,
   clubTotalDraws,
-  clubTotalLosses,
+  // clubTotalLosses,
   clubTotalGoalsFor,
   clubTotalGoalsAgainst,
   clubTotalGoalsDifference,
