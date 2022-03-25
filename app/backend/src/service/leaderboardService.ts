@@ -1,7 +1,7 @@
 import {
   clubTotalGames,
   clubTotalPoints,
-  clubTotalWins,
+  clubTotalVictories,
   clubTotalDraws,
   clubTotalLosses,
   clubTotalGoalsFavor,
@@ -21,7 +21,7 @@ async function homeService() {
     name: club.clubName,
     totalPoints: await clubTotalPoints(club),
     totalGames: await clubTotalGames(club),
-    totalWins: await clubTotalWins(club),
+    totalVictories: await clubTotalVictories(club),
     totalDraws: await clubTotalDraws(club),
     totalLosses: await clubTotalLosses(club),
     goalsFavor: await clubTotalGoalsFavor(club),

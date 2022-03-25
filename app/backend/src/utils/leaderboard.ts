@@ -3,38 +3,43 @@ import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 import { ILeaderboard } from '../interface/Leaderboard';
 
-//   totalPoints: number;
+//   totalVictories: number;
 //   totalGames: number;
-//   totalWins: number;
+//   totalVictories: number;
 //   totalDraws: number;
 //   totalLosses: number;
-//   totalGoalsFor: number;
+//   totalGoalsFavor: number;
 //   GolsOwn: number;
 //   totalGoalsDifference: number;
 //   takeAdvantagePercentage: number;
 
 async function getAllMatchsClub(club: Club) {
-  const matches = await Match.findAll({
-    where: {
-      homeTeam: club.id,
-      inProgress: 0,
-    },
-    attributes: ['homeTeamGoals', 'awayTeamGoals'],
+  const matches = await Match.findAll({ where: {
+    homeTeam: club.id,
+    inProgress: false,
+  },
+  raw: true,
+  attributes: ['homeTeamGoals', 'awayTeamGoals'],
   });
+  // if (club.clubName === 'Santos') {
+  //   console.log('matches: ', matches);
+  // }
 
   return matches;
 }
 
-async function clubTotalWins(club: Club) {
+async function clubTotalVictories(club: Club) {
   const matches = await getAllMatchsClub(club);
-  const totalWins = matches.reduce((acc, curr) => {
+  const totalVictories = matches.reduce((acc, curr) => {
     if (curr.homeTeamGoals > curr.awayTeamGoals) {
       return acc + 1;
     }
     return acc;
   }, 0);
-
-  return totalWins;
+  if (club.clubName === 'Santos') {
+    console.log('vitorias correta: 3', totalVictories);
+  }
+  return totalVictories;
 }
 
 async function clubTotalDraws(club: Club) {
@@ -45,22 +50,25 @@ async function clubTotalDraws(club: Club) {
     }
     return acc;
   }, 0);
-
+  if (club.clubName === 'Santos') {
+    console.log('Empates correto :2', totalDraws);
+  }
   return totalDraws;
 }
 
 async function clubTotalPoints(club: Club) {
-  const W = await clubTotalWins(club);
+  const W = await clubTotalVictories(club);
   const D = await clubTotalDraws(club);
-  if (club.clubName === 'Santos') {
-    console.log(W, D);
-  }
-  const totalPoints = ((W * 3) + D);
-  return totalPoints;
+
+  const totalVictories = ((W * 3) + D);
+  return totalVictories;
 }
 
 async function clubTotalGames(club: Club) {
   const totalGames = (await getAllMatchsClub(club)).length;
+  if (club.clubName === 'Santos') {
+    console.log('Total de jogos correto: 5', totalGames);
+  }
   return totalGames;
 }
 
@@ -77,34 +85,42 @@ async function clubTotalLosses(club: Club) {
 }
 
 async function clubTotalGoalsFavor(club: Club) {
-  const totalGoalsFor = await Match.sum('homeTeamGoals', {
+  const totalGoalsFavor = await Match.sum('homeTeamGoals', {
     where: {
       homeTeam: club.id,
       inProgress: 0,
     },
   });
-  return totalGoalsFor;
+  if (club.clubName === 'Santos') {
+    console.log('Gols pros correto: 12', totalGoalsFavor);
+  }
+  return totalGoalsFavor;
 }
 
 async function clubGoalsOwn(club: Club) {
   const golsOwn = await Match.sum('awayTeamGoals', {
     where: {
-      awayTeam: club.id,
+      homeTeam: club.id,
       inProgress: 0,
     },
   });
+  if (club.clubName === 'Santos') {
+    console.log('Gols contra correto: 6', golsOwn);
+  }
   return golsOwn;
 }
 
 async function clubTotalGoalsDifference(club: Club) {
-  const totalGoalsDifference = await clubTotalGoalsFavor(club) - await clubGoalsOwn(club);
+  const goalsFavor = await clubTotalGoalsFavor(club);
+  const goalsOwn = await clubGoalsOwn(club);
+  const totalGoalsDifference = goalsFavor - goalsOwn;
   return totalGoalsDifference;
 }
 
 async function clubTakeAdvantagePercentage(club: Club) {
   const P = await clubTotalPoints(club);
   const J = await clubTotalGames(club);
-  const takeAdvantagePercentage = Number(((P / ((3 * J))) * 100).toFixed(2));
+  const takeAdvantagePercentage = Number(((P / (3 * J)) * 100).toFixed(2));
   return takeAdvantagePercentage;
 }
 
@@ -112,9 +128,9 @@ async function clubTakeAdvantagePercentage(club: Club) {
 function sortTeams(leaderboardList: ILeaderboard[]) {
   const sortedClubs = leaderboardList.sort(
     firstBy('totalPoints', { direction: 'desc' })
-      .thenBy('totalWins', { direction: 'desc' })
-      .thenBy('totalGoalsDifference', { direction: 'desc' })
-      .thenBy('totalGoalsFor', { direction: 'desc' })
+      .thenBy('totalVictories', { direction: 'desc' })
+      .thenBy('goalsBalance', { direction: 'desc' })
+      .thenBy('goalsFavor', { direction: 'desc' })
       .thenBy('goalsOwn', { direction: 'asc' }),
   );
   return sortedClubs;
@@ -123,7 +139,7 @@ function sortTeams(leaderboardList: ILeaderboard[]) {
 export {
   clubTotalPoints,
   clubTotalGames,
-  clubTotalWins,
+  clubTotalVictories,
   clubTotalDraws,
   clubTotalLosses,
   clubTotalGoalsFavor,
