@@ -7,6 +7,7 @@ enum Message {
   SAME_TEAMS = 'It is not possible to create a match with two equal teams',
   MATCH_FINISHED = 'Match is finished',
   TEAM_NOT_EXIST = 'There is no team with such id!',
+  MATCH_GOLS_UPDATED = 'Match goals updated',
 }
 
 export default Message;

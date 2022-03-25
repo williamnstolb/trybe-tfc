@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import { getAllService, createService, finishMatchService } from '../service/matchsService';
+import { getAllService,
+  createService, finishMatchService, updateService } from '../service/matchsService';
 import ResponseStatusMessage from '../interface/Response';
 
 async function getAllMatchs(req: Request, res: Response): Promise<void> {
@@ -26,8 +27,21 @@ async function finishMatch(req: Request, res: Response): Promise<void> {
   res.status(status).json(message);
 }
 
+async function updateMatch(req: Request, res: Response): Promise<void> {
+  const { id } = req.params;
+  const { homeTeamGoals, awayTeamGoals } = req.body;
+  const { status, message }: ResponseStatusMessage = await updateService(
+    Number(id),
+    homeTeamGoals,
+    awayTeamGoals,
+  );
+
+  res.status(status).json({ message });
+}
+
 export {
   getAllMatchs,
   create,
   finishMatch,
+  updateMatch,
 };

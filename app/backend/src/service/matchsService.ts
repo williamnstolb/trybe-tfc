@@ -49,8 +49,14 @@ async function finishMatchService(id: number) {
   return { status: StatusCode.OK, message: Message.MATCH_FINISHED };
 }
 
+async function updateService(id: number, homeTeamGoals: number, awayTeamGoals: number) {
+  await Match.update({ homeTeamGoals, awayTeamGoals }, { where: { id } });
+  return { status: StatusCode.OK, message: Message.MATCH_GOLS_UPDATED };
+}
+
 export {
   getAllService,
   createService,
   finishMatchService,
+  updateService,
 };
