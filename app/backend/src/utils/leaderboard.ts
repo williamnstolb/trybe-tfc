@@ -15,7 +15,7 @@ function clubName(club: Club) {
   return club.clubName;
 }
 
-async function getGames(club: Club) {
+async function getAllMatchsClub(club: Club) {
   const matches = await Match.findAll({
     where: {
       homeClubId: club.id,
@@ -28,7 +28,7 @@ async function getGames(club: Club) {
 }
 
 async function clubTotalWins(club: Club) {
-  const matches = await getGames(club);
+  const matches = await getAllMatchsClub(club);
   const totalWins = matches.reduce((acc, curr) => {
     if (curr.homeTeamGoals > curr.awayTeamGoals) {
       return acc + 1;
@@ -40,7 +40,7 @@ async function clubTotalWins(club: Club) {
 }
 
 async function clubTotalDraws(club: Club) {
-  const matches = await getGames(club);
+  const matches = await getAllMatchsClub(club);
   const totalDraws = matches.reduce((acc, curr) => {
     if (curr.homeTeamGoals === curr.awayTeamGoals) {
       return acc + 1;
@@ -56,15 +56,15 @@ async function clubTotalPoints(club: Club) {
   return totalPoints;
 }
 
-function clubTotalGames(club: Club) {
-  const totalGames = 0;
+async function clubTotalGames(club: Club) {
+  const totalGames = (await getAllMatchsClub(club)).length;
   return totalGames;
 }
 
-function clubTotalLosses(club: Club) {
-  const totalLosses = 0;
-  return totalLosses;
-}
+// function clubTotalLosses(club: Club) {
+//   const totalLosses = 0;
+//   return totalLosses;
+// }
 
 function clubTotalGoalsFor(club: Club) {
   const totalGoalsFor = 0;
