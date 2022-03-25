@@ -2,26 +2,22 @@ import { firstBy } from 'thenby';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
 import { ILeaderboard } from '../interface/Leaderboard';
-//   name: string;
+
 //   totalPoints: number;
 //   totalGames: number;
 //   totalWins: number;
 //   totalDraws: number;
 //   totalLosses: number;
 //   totalGoalsFor: number;
-//   totalGoalsAgainst: number;
+//   GolsOwn: number;
 //   totalGoalsDifference: number;
 //   takeAdvantagePercentage: number;
-
-function clubName(club: Club) {
-  return club.clubName;
-}
 
 async function getAllMatchsClub(club: Club) {
   const matches = await Match.findAll({
     where: {
-      homeClubId: club.id,
-      inProgress: false,
+      homeTeam: club.id,
+      inProgress: 0,
     },
     attributes: ['homeTeamGoals', 'awayTeamGoals'],
   });
@@ -54,7 +50,12 @@ async function clubTotalDraws(club: Club) {
 }
 
 async function clubTotalPoints(club: Club) {
-  const totalPoints: number = await clubTotalWins(club) * 3 + await clubTotalDraws(club);
+  const W = await clubTotalWins(club);
+  const D = await clubTotalDraws(club);
+  if (club.clubName === 'Santos') {
+    console.log(W, D);
+  }
+  const totalPoints = ((W * 3) + D);
   return totalPoints;
 }
 
@@ -63,61 +64,70 @@ async function clubTotalGames(club: Club) {
   return totalGames;
 }
 
-// function clubTotalLosses(club: Club) {
-//   const totalLosses = 0;
-//   return totalLosses;
-// }
+async function clubTotalLosses(club: Club) {
+  const matches = await getAllMatchsClub(club);
+  const totalLosses = matches.reduce((acc, curr) => {
+    if (curr.homeTeamGoals < curr.awayTeamGoals) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
 
-async function clubTotalGoalsFor(club: Club) {
+  return totalLosses;
+}
+
+async function clubTotalGoalsFavor(club: Club) {
   const totalGoalsFor = await Match.sum('homeTeamGoals', {
     where: {
-      homeClubId: club.id,
-      inProgress: false,
+      homeTeam: club.id,
+      inProgress: 0,
     },
   });
   return totalGoalsFor;
 }
 
-async function clubTotalGoalsAgainst(club: Club) {
-  const totalGoalsAgainst = await Match.sum('awayTeamGoals', {
+async function clubGoalsOwn(club: Club) {
+  const golsOwn = await Match.sum('awayTeamGoals', {
     where: {
-      awayClubId: club.id,
-      inProgress: false,
+      awayTeam: club.id,
+      inProgress: 0,
     },
   });
-  return totalGoalsAgainst;
+  return golsOwn;
 }
 
 async function clubTotalGoalsDifference(club: Club) {
-  const totalGoalsDifference = await clubTotalGoalsFor(club) - await clubTotalGoalsAgainst(club);
+  const totalGoalsDifference = await clubTotalGoalsFavor(club) - await clubGoalsOwn(club);
   return totalGoalsDifference;
 }
 
 async function clubTakeAdvantagePercentage(club: Club) {
   const P = await clubTotalPoints(club);
   const J = await clubTotalGames(club);
-  const takeAdvantagePercentage = P / ((3 * J) * 100);
+  const takeAdvantagePercentage = Number(((P / ((3 * J))) * 100).toFixed(2));
   return takeAdvantagePercentage;
 }
 
-async function sortTeams(leaderboardList: ILeaderboard[]) {
+// source: https://www.npmjs.com/package/thenby
+function sortTeams(leaderboardList: ILeaderboard[]) {
   const sortedClubs = leaderboardList.sort(
-    firstBy('totalPoints')
-      .thenBy('totalWins')
-      .thenBy('totalGoalsFor'),
+    firstBy('totalPoints', { direction: 'desc' })
+      .thenBy('totalWins', { direction: 'desc' })
+      .thenBy('totalGoalsDifference', { direction: 'desc' })
+      .thenBy('totalGoalsFor', { direction: 'desc' })
+      .thenBy('goalsOwn', { direction: 'asc' }),
   );
   return sortedClubs;
 }
 
 export {
-  clubName,
   clubTotalPoints,
   clubTotalGames,
   clubTotalWins,
   clubTotalDraws,
-  // clubTotalLosses,
-  clubTotalGoalsFor,
-  clubTotalGoalsAgainst,
+  clubTotalLosses,
+  clubTotalGoalsFavor,
+  clubGoalsOwn,
   clubTotalGoalsDifference,
   clubTakeAdvantagePercentage,
   sortTeams,
