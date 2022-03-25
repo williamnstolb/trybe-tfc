@@ -1,5 +1,7 @@
+import { firstBy } from 'thenby';
 import Club from '../database/models/Club';
 import Match from '../database/models/Match';
+import { ILeaderboard } from '../interface/Leaderboard';
 //   name: string;
 //   totalPoints: number;
 //   totalGames: number;
@@ -92,8 +94,19 @@ async function clubTotalGoalsDifference(club: Club) {
 }
 
 async function clubTakeAdvantagePercentage(club: Club) {
-  const takeAdvantagePercentage = 0;
+  const P = await clubTotalPoints(club);
+  const J = await clubTotalGames(club);
+  const takeAdvantagePercentage = P / ((3 * J) * 100);
   return takeAdvantagePercentage;
+}
+
+async function sortTeams(leaderboardList: ILeaderboard[]) {
+  const sortedClubs = leaderboardList.sort(
+    firstBy('totalPoints')
+      .thenBy('totalWins')
+      .thenBy('totalGoalsFor'),
+  );
+  return sortedClubs;
 }
 
 export {
@@ -107,4 +120,5 @@ export {
   clubTotalGoalsAgainst,
   clubTotalGoalsDifference,
   clubTakeAdvantagePercentage,
+  sortTeams,
 };
