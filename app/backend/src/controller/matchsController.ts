@@ -4,22 +4,26 @@ import ResponseStatusMessage from '../interface/Response';
 
 async function getAllMatchs(req: Request, res: Response): Promise<void> {
   const { inProgress } = req.query;
-  const response: ResponseStatusMessage = await getAllService(inProgress);
-  res.status(response.status).json(response.message);
+  const { status, message }: ResponseStatusMessage = await getAllService(inProgress);
+  res.status(status).json(message);
 }
 
 async function create(req: Request, res: Response): Promise<void> {
   const { authorization } = req.headers;
 
-  const response: ResponseStatusMessage = await createService(req.body, authorization);
-  res.status(response.status).json(response.message);
+  const { status, message }: ResponseStatusMessage = await createService(req.body, authorization);
+  if (status !== 201) {
+    res.status(status).json({ message });
+  } else {
+    res.status(status).json(message);
+  }
 }
 
 async function finishMatch(req: Request, res: Response): Promise<void> {
   const { id } = req.params;
-  const response: ResponseStatusMessage = await finishMatchService(Number(id));
+  const { status, message }: ResponseStatusMessage = await finishMatchService(Number(id));
 
-  res.status(response.status).json(response.message);
+  res.status(status).json(message);
 }
 
 export {
