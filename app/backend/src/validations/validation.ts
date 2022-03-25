@@ -1,4 +1,4 @@
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import Message from '../utils/message';
 import StatusCode from '../utils/statusCode';
 import { IPasswordValidate } from '../interface/User';
@@ -12,8 +12,8 @@ async function emailValidation(email: string) {
     return { message: Message.FIELD_MUST_BE_FILLED, status: StatusCode.UNAUTHORIZED };
   }
 
-  if (!email.match(emailFormat)) {
-    return { message: Message.INCORRECT_FORMAT_EMAIL, status: StatusCode.UNAUTHORIZED };
+  if (!(email.match(emailFormat))) {
+    return { message: Message.INCORRECT_EMAIL_OR_PASSWORD, status: StatusCode.UNAUTHORIZED };
   }
   return false;
 }
@@ -30,8 +30,6 @@ async function passwordValidation(password: string) {
 }
 
 async function passwordCorrect({ password, userPw }: IPasswordValidate): Promise<boolean> {
-  console.log('password ====>', password);
-  console.log('userPw ====>', userPw);
   const passwordOk = await compare(password, userPw);
   return passwordOk;
 }
