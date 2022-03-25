@@ -3,6 +3,7 @@ import * as cors from 'cors';
 import { login, validate } from './controller/loginController';
 import { getAllClubs, getByIdCLub } from './controller/clubsController';
 import { getAllMatchs, create, finishMatch, updateMatch } from './controller/matchsController';
+import { home } from './controller/leaderboardController';
 
 class App {
   public app: express.Express;
@@ -34,6 +35,7 @@ class App {
     this.app.post('/matchs', create);
     this.app.patch('/matchs/:id/finish', finishMatch);
     this.app.patch('/matchs/:id', updateMatch);
+    this.app.get('/home', home);
     // ...
   }
 
