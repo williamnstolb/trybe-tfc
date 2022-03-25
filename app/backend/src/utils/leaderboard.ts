@@ -15,7 +15,7 @@ function clubName(club: Club) {
   return club.clubName;
 }
 
-async function getGamesWon(club: Club) {
+async function getGames(club: Club) {
   const matches = await Match.findAll({
     where: {
       homeClubId: club.id,
@@ -28,8 +28,8 @@ async function getGamesWon(club: Club) {
 }
 
 async function clubTotalWins(club: Club) {
-  const matches = await getGamesWon(club);
-  const totalWins = await matches.reduce((acc, curr) => {
+  const matches = await getGames(club);
+  const totalWins = matches.reduce((acc, curr) => {
     if (curr.homeTeamGoals > curr.awayTeamGoals) {
       return acc + 1;
     }
@@ -40,7 +40,14 @@ async function clubTotalWins(club: Club) {
 }
 
 async function clubTotalDraws(club: Club) {
-  const totalDraws = 0;
+  const matches = await getGames(club);
+  const totalDraws = matches.reduce((acc, curr) => {
+    if (curr.homeTeamGoals === curr.awayTeamGoals) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+
   return totalDraws;
 }
 
