@@ -3,7 +3,7 @@ import * as cors from 'cors';
 import { login, validate } from './controller/loginController';
 import { getAllClubs, getByIdCLub } from './controller/clubsController';
 import { getAllMatchs, create, finishMatch, updateMatch } from './controller/matchsController';
-import { home, away, leaderboard } from './controller/leaderboardController';
+import { home } from './controller/leaderboardController';
 
 class App {
   public app: express.Express;
@@ -27,12 +27,6 @@ class App {
     this.app.use(accessControl);
     this.app.use(express.json());
     this.app.use(cors());
-    this.routes();
-
-    // ...
-  }
-
-  public routes(): void {
     this.app.post('/login', login);
     this.app.get('/login/validate', validate);
     this.app.get('/clubs', getAllClubs);
@@ -42,9 +36,26 @@ class App {
     this.app.patch('/matchs/:id/finish', finishMatch);
     this.app.patch('/matchs/:id', updateMatch);
     this.app.get('/leaderboard/home', home);
-    this.app.get('/leaderboard/away', away);
-    this.app.get('/leaderboard', leaderboard);
+    // this.app.get('/leaderboard/away', away);
+    // this.app.get('/leaderboard', leaderboard);
+    // this.routes();
+
+    // ...
   }
+
+  // public routes(): void {
+  //   this.app.post('/login', login);
+  //   this.app.get('/login/validate', validate);
+  //   this.app.get('/clubs', getAllClubs);
+  //   this.app.get('/clubs/:id', getByIdCLub);
+  //   this.app.get('/matchs', getAllMatchs);
+  //   this.app.post('/matchs', create);
+  //   this.app.patch('/matchs/:id/finish', finishMatch);
+  //   this.app.patch('/matchs/:id', updateMatch);
+  //   this.app.get('/leaderboard/home', home);
+  //   this.app.get('/leaderboard/away', away);
+  //   this.app.get('/leaderboard', leaderboard);
+  // }
 
   // ...
   public start(PORT: string | number):void {

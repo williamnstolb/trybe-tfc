@@ -40,8 +40,10 @@ async function leaderboardService() {
   // const away = (await homeOrAwayService('away')).message;
   // let count = 0;
 
-  // const leaderboard: ILeaderboard[] = home.map((club) => {{
-  //     nome: club.name,
+  // const leaderboard: ILeaderboard[] = home.map((club) => {
+  //   count += 1;
+  //   return {
+  //     name: club.name,
   //     totalPoints: club.totalPoints + away[count].totalPoints,
   //     totalGames: club.totalGames + away[count].totalGames,
   //     totalVictories: club.totalVictories + away[count].totalVictories,
@@ -52,8 +54,7 @@ async function leaderboardService() {
   //     goalsBalance: club.goalsBalance + away[count].goalsBalance,
   //     efficiency: club.efficiency + away[count].efficiency,
   //   };
-  //   count += 1;
-  //   }
+  // });
 
   // const sortedLeaderboard = sortTeams(leaderboard);
 
