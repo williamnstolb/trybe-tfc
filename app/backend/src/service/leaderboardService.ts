@@ -38,9 +38,6 @@ async function homeOrAwayService(selectKey: string) {
 async function leaderboardService() {
   const homeList = sortByName((await homeOrAwayService('home')).message);
   const awayList = sortByName((await homeOrAwayService('away')).message);
-  console.log('home ======>', homeList[3].name, homeList[3].totalPoints);
-  
-  console.log('away ======>', awayList[3].name, awayList[3].totalPoints);
 
   const leaderboard: ILeaderboard[] = homeList.map((club, count = 0) => ({
     name: club.name,

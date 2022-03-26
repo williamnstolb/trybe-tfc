@@ -73,8 +73,8 @@ async function clubTotalGames(club: Club, selectKey: string) {
 async function clubTotalLosses(club: Club, selectKey: string) {
   const matches = await getAllMatchsClub(club, selectKey);
   const totalLosses = matches.reduce((acc, curr) => {
-    const test = (selectKey === 'away') ? (curr.homeTeamGoals < curr.awayTeamGoals) : (
-      curr.homeTeamGoals < curr.awayTeamGoals);
+    const test = (selectKey === 'home') ? (curr.homeTeamGoals < curr.awayTeamGoals) : (
+      curr.homeTeamGoals > curr.awayTeamGoals);
     if (test) {
       return acc + 1;
     }
