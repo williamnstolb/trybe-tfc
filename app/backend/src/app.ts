@@ -25,8 +25,6 @@ class App {
     };
 
     this.app.use(accessControl);
-    this.app.use(express.json());
-    this.app.use(cors());
     // this.app.post('/login', login);
     // this.app.get('/login/validate', validate);
     // this.app.get('/clubs', getAllClubs);
@@ -59,6 +57,8 @@ class App {
 
   // ...
   public start(PORT: string | number):void {
+    this.app.use(express.json());
+    this.app.use(cors());
     this.app.post('/login', login);
     this.app.get('/login/validate', validate);
     this.app.get('/clubs', getAllClubs);
