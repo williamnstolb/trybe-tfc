@@ -21,11 +21,8 @@ async function getAllMatchsClub(club: Club, selectKey: string) {
       });
 
     case selectKey === 'away':
-      return Match.findAll({ where: {
-        awayTeam: club.id,
-        inProgress: false,
-      },
-      attributes: ['homeTeamGoals', 'awayTeamGoals'],
+      return Match.findAll({ where: { awayTeam: club.id, inProgress: false },
+        attributes: ['homeTeamGoals', 'awayTeamGoals'],
       });
 
     default:
@@ -36,7 +33,9 @@ async function getAllMatchsClub(club: Club, selectKey: string) {
 async function clubTotalVictories(club: Club, selectKey: string) {
   const matches = await getAllMatchsClub(club, selectKey);
   const totalVictories = matches.reduce((acc, curr) => {
-    if (curr.homeTeamGoals > curr.awayTeamGoals) {
+    const test = (selectKey === 'home') ? (curr.homeTeamGoals > curr.awayTeamGoals) : (
+      curr.homeTeamGoals < curr.awayTeamGoals);
+    if (test) {
       return acc + 1;
     }
     return acc;
@@ -74,7 +73,9 @@ async function clubTotalGames(club: Club, selectKey: string) {
 async function clubTotalLosses(club: Club, selectKey: string) {
   const matches = await getAllMatchsClub(club, selectKey);
   const totalLosses = matches.reduce((acc, curr) => {
-    if (curr.homeTeamGoals < curr.awayTeamGoals) {
+    const test = (selectKey === 'away') ? (curr.homeTeamGoals < curr.awayTeamGoals) : (
+      curr.homeTeamGoals < curr.awayTeamGoals);
+    if (test) {
       return acc + 1;
     }
     return acc;
@@ -156,6 +157,13 @@ function sortTeams(leaderboardList: ILeaderboard[]) {
   return sortedClubs;
 }
 
+function sortByName(leaderboardList: ILeaderboard[]) {
+  const sortedClubs = leaderboardList.sort(
+    firstBy('name', { direction: 'asc' }),
+  );
+  return sortedClubs;
+}
+
 export {
   clubTotalPoints,
   clubTotalGames,
@@ -167,4 +175,5 @@ export {
   clubTotalGoalsDifference,
   clubTakeAdvantagePercentage,
   sortTeams,
+  sortByName,
 };

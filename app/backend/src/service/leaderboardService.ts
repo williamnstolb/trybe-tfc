@@ -9,7 +9,7 @@ import {
   clubTotalGoalsDifference,
   clubTakeAdvantagePercentage,
   sortTeams,
-
+  sortByName,
 } from '../utils/leaderboard';
 import Club from '../database/models/Club';
 import { ILeaderboard } from '../interface/Leaderboard';
@@ -36,29 +36,29 @@ async function homeOrAwayService(selectKey: string) {
 }
 
 async function leaderboardService() {
-  // const home = (await homeOrAwayService('home')).message;
-  // const away = (await homeOrAwayService('away')).message;
-  // let count = 0;
+  const homeList = sortByName((await homeOrAwayService('home')).message);
+  const awayList = sortByName((await homeOrAwayService('away')).message);
+  console.log('home ======>', homeList[3].name, homeList[3].totalPoints);
+  
+  console.log('away ======>', awayList[3].name, awayList[3].totalPoints);
 
-  // const leaderboard: ILeaderboard[] = home.map((club) => {
-  //   count += 1;
-  //   return {
-  //     name: club.name,
-  //     totalPoints: club.totalPoints + away[count].totalPoints,
-  //     totalGames: club.totalGames + away[count].totalGames,
-  //     totalVictories: club.totalVictories + away[count].totalVictories,
-  //     totalDraws: club.totalDraws + away[count].totalDraws,
-  //     totalLosses: club.totalLosses + away[count].totalLosses,
-  //     goalsFavor: club.goalsFavor + away[count].goalsFavor,
-  //     goalsOwn: club.goalsOwn + away[count].goalsOwn,
-  //     goalsBalance: club.goalsBalance + away[count].goalsBalance,
-  //     efficiency: club.efficiency + away[count].efficiency,
-  //   };
-  // });
+  const leaderboard: ILeaderboard[] = homeList.map((club, count = 0) => ({
+    name: club.name,
+    totalPoints: club.totalPoints + awayList[count].totalPoints,
+    totalGames: club.totalGames + awayList[count].totalGames,
+    totalVictories: club.totalVictories + awayList[count].totalVictories,
+    totalDraws: club.totalDraws + awayList[count].totalDraws,
+    totalLosses: club.totalLosses + awayList[count].totalLosses,
+    goalsFavor: club.goalsFavor + awayList[count].goalsFavor,
+    goalsOwn: club.goalsOwn + awayList[count].goalsOwn,
+    goalsBalance: club.goalsBalance + awayList[count].goalsBalance,
+    efficiency: Number((((club.totalPoints + awayList[count].totalPoints) / (
+      (club.totalGames + awayList[count].totalGames) * 3)) * 100).toFixed(2)),
+  }));
 
-  // const sortedLeaderboard = sortTeams(leaderboard);
+  const sortedLeaderboard = sortTeams(leaderboard);
 
-  return { status: StatusCode.OK, message: 'sortedLeaderboard' };
+  return { status: StatusCode.OK, message: sortedLeaderboard };
 }
 
 export {
